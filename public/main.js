@@ -3,7 +3,7 @@ document.getElementById('surveyForm').addEventListener('submit', async (e) => {
   const fd = new FormData(e.target);
   const obj = {};
   fd.forEach((v,k) => obj[k] = v);
-  const resp = await fetch('/https://nyota-survey.onrender.com', {
+  const resp = await fetch('/https://nyota-survey-1.onrender.com', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify(obj)
