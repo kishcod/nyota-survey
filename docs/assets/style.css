@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; background:#f8f9fb; color:#222; }
+.container { max-width:720px; margin:60px auto; padding:24px; background:#fff; border-radius:12px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+h1 { margin-top:0; }
+label { display:block; margin:12px 0; }
+input { padding:8px; width:100%; box-sizing:border-box; margin-top:6px; }
+button, .btn { display:inline-block; padding:10px 16px; margin-top:12px; border-radius:8px; background:#0b63d4; color:white; text-decoration:none; border:none; cursor:pointer; }
+a.btn { background:#0b63d4; color:white; }
+#result { margin-top:12px; font-weight:600; }

@@ -1,41 +1,45 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8"/>
-  <title>Activation Payment - Nyota</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="/styles.css"/>
+  <meta charset="utf-8" />
+  <title>Nyota - Payment</title>
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Activate your grant: Send KES 50</h1>
-    <p>We will send you an STK Push to complete payment (requires M-Pesa Daraja credentials).</p>
+  <main class="container">
+    <h1>Pay KSH 50 to activate processing</h1>
+    <p>Choose payment method:</p>
 
-    <form id="payForm">
-      <label>Phone number<input name="phone" required placeholder="+2547..." /></label>
-      <input type="hidden" name="amount" value="50" />
-      <button type="submit">Pay KES 50 (STK Push)</button>
-    </form>
+    <h3>Manual (Till)</h3>
+    <p>Pay to Till: <strong>8160572</strong></p>
+    <p>Use Account reference: Your full name</p>
+
+    <hr/>
+    <h3>OR Pay using STK Push (M-Pesa)</h3>
+    <label>Phone (2547...): <input id="phone" value="2547"/></label><br/>
+    <button id="payBtn">Pay KSH 50 via STK Push</button>
 
     <div id="result"></div>
-  </div>
+
+    <a class="btn" href="wait.html">I have paid — Go to waiting page</a>
+  </main>
+
   <script>
-    document.getElementById('payForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const phone = form.phone.value;
-      const amount = 50;
-      const resp = await fetch('/api/stk-push', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ phone, amount, accountRef: 'Nyota', transactionDesc: 'Activation fee' })
-      });
-      const data = await resp.json();
-      const result = document.getElementById('result');
-      if (data.ok) {
-        result.innerHTML = '<p>STK push initiated. If your phone receives the prompt, complete payment. After payment, you will be guided to the final page.</p><p><a href="/wait.html">I paid — go to final step</a></p>';
-      } else {
-        result.innerText = 'Error: ' + (data.error || JSON.stringify(data));
+    document.getElementById('payBtn').addEventListener('click', async () => {
+      const phone = document.getElementById('phone').value.trim();
+      const resDiv = document.getElementById('result');
+      resDiv.textContent = 'Sending request...';
+      try {
+        const resp = await fetch('http://localhost:3000/api/initiate-stk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: phone, amount: 50 })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(JSON.stringify(data));
+        resDiv.textContent = 'STK push initiated. Check your phone for the payment prompt.';
+      } catch (err) {
+        resDiv.textContent = 'Failed to start STK push: ' + err;
       }
     });
   </script>
